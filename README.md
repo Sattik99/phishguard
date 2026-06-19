@@ -23,6 +23,10 @@ The platform evaluates:
 
 The results are aggregated into a phishing risk score and classification.
 
+<img width="2527" height="835" alt="image" src="https://github.com/user-attachments/assets/fefd688c-c197-4fad-a71c-61fcf1ebc811" />
+
+<img width="2483" height="1291" alt="image" src="https://github.com/user-attachments/assets/60e4af2c-8841-453b-884c-235799a89aff" />
+
 ---
 
 ## Features
