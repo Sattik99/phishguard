@@ -4,7 +4,7 @@ from phishing_analyzer.analyzer import analyze_email
 st.set_page_config(page_title="PhishGuard", page_icon="🛡️", layout="wide")
 
 st.title("🛡️ PhishGuard")
-st.caption("Phishing detection platform: email header, URL, content, and domain intelligence analysis")
+st.caption("Phishing detection platform: email header, URL, content, domain intelligence, and URL reputation analysis")
 
 sample = """From: Microsoft Security <security@microsoft-alerts.example.com>
 Reply-To: support@evil-login.xyz
@@ -32,11 +32,12 @@ if st.button("Analyze Email", type="primary"):
     st.subheader("Result")
     st.metric("Risk Score", f"{result['score']}/100", result["classification"])
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
     col1.metric("Header Score", result["breakdown"]["headers"])
     col2.metric("Content Score", result["breakdown"]["content"])
     col3.metric("URL Score", result["breakdown"]["urls"])
     col4.metric("Domain Score", result["breakdown"].get("domains", 0))
+    col5.metric("Reputation Score", result["breakdown"].get("reputation", 0))
 
     st.subheader("Email Metadata")
     st.json(result["metadata"])
@@ -62,6 +63,22 @@ if st.button("Analyze Email", type="primary"):
                     st.write(f"- {finding}")
     else:
         st.write("No domains found for analysis.")
+
+    st.subheader("URL Reputation")
+    if result.get("reputation"):
+        for item in result["reputation"]:
+            with st.expander(f"URL: {item['url']}"):
+                st.write(f"**Source:** {item.get('source')}")
+                st.write(f"**Query Status:** {item.get('query_status')}")
+                st.write(f"**Threat:** {item.get('threat')}")
+                st.write(f"**URL Status:** {item.get('url_status')}")
+                st.write(f"**Reputation Risk Score:** {item.get('risk_score')}")
+
+                st.write("**Reputation Findings:**")
+                for finding in item.get("findings", []):
+                    st.write(f"- {finding}")
+    else:
+        st.write("No URL reputation data available.")
 
     st.subheader("Findings")
     for finding in result["findings"]:
